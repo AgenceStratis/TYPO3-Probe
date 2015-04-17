@@ -382,7 +382,7 @@ class Check {
 			);
 		} else {
 			$status = new OkStatus();
-			$status->setTitle('PHP Maximum file upload size is higher or equal to 10MB');
+			$status->setTitle('Maximum file upload size is higher or equal to 10MB ('.ini_get('upload_max_filesize').')');
 		}
 		return $status;
 	}
@@ -407,7 +407,7 @@ class Check {
 			);
 		} else {
 			$status = new OkStatus();
-			$status->setTitle('Maximum post upload size correlates with maximum upload file size in PHP');
+			$status->setTitle('Maximum post upload size correlates with maximum upload file size in PHP ('.ini_get('post_max_size').')');
 		}
 		return $status;
 	}
@@ -454,7 +454,7 @@ class Check {
 			);
 		} else {
 			$status = new OkStatus();
-			$status->setTitle('PHP Memory limit equals to ' . $recommendedMemoryLimit . 'MB or more');
+			$status->setTitle('PHP Memory limit equals to ' . $recommendedMemoryLimit . 'MB or more ('.ini_get('memory_limit').')');
 		}
 		return $status;
 	}
@@ -476,7 +476,7 @@ class Check {
 			);
 		} else {
 			$status = new OkStatus();
-			$status->setTitle('PHP version is fine');
+			$status->setTitle('PHP version is fine ('.$currentPhpVersion.')');
 		}
 		return $status;
 	}
