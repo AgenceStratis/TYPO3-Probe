@@ -1493,7 +1493,7 @@ function printStatusCli($sortedStatusObjects) {
 				}
 			}
 
-			$content .= $mode . $status->getTitle() . "\033[0m\n";
+			$content .= $mode . ' ' . $status->getTitle() . "\033[0m\n";
 			if ($status->getMessage()) {
 				$content .= $status->getMessage() . "\n";
 			}
