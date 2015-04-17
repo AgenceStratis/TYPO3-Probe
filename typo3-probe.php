@@ -1408,6 +1408,8 @@ class StatusView {
 
 }
 
+define('LF', chr(10));
+
 $check = new Check();
 $statusObjects = $check->getStatus();
 
