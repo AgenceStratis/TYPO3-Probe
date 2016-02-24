@@ -1070,7 +1070,7 @@ class Check {
 			&& function_exists('imagegif')
 			&& (imagetypes() & IMG_GIF)
 		) {
-			$imageResource = @imagecreatefromgif(__DIR__ . '/../../Resources/Public/Images/TestInput/Test.gif');
+			$imageResource = @imagecreatefromgif(__DIR__ . '/TestImages/jesus.gif');
 			if (is_resource($imageResource)) {
 				imagedestroy($imageResource);
 				$status = new OkStatus();
@@ -1129,7 +1129,7 @@ class Check {
 			&& function_exists('imagepng')
 			&& (imagetypes() & IMG_PNG)
 		) {
-			$imageResource = @imagecreatefrompng(__DIR__ . '/../../Resources/Public/Images/TestInput/Test.png');
+			$imageResource = @imagecreatefrompng(__DIR__ . '/TestImages/jesus.png');
 			if (is_resource($imageResource)) {
 				imagedestroy($imageResource);
 				$status = new OkStatus();
