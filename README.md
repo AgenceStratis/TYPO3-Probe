@@ -3,11 +3,7 @@
 Stratis TYPO3 Probe
 ===========
 
-![Scrutinizer-CI Code quality](https://scrutinizer-ci.com/g/7elix/TYPO3-Probe/badges/quality-score.png?s=d398c1c9b0712cf5ef1b4b030d59f6bb4776153e)
-
-![Scrutinizer-CI Code coverage](http://scrutinizer-ci.com/g/7elix/TYPO3-Probe/badges/coverage.png?s=25072cfa95c11aea7d23609ff756a3cbb4b13796)
-
-![Travis-CI Build Status](https://travis-ci.org/7elix/TYPO3-Probe.png?branch=master)
+![Travis-CI Build Status](https://travis-ci.org/AgenceStratis/TYPO3-Probe.png?branch=master)
 
 Probe is a small and handy script to easily determine if your server full-fills requirements to run TYPO3 CMS 8.7; originally created by <a href="https://twitter.com/7elix" target="_blank">Felix Kopp</a>. Inspired by <a href="https://github.com/activecollab/activecollab-probe/" target="_blank">activeCollab Probe</a>.
 
