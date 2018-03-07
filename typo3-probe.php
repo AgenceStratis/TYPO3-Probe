@@ -4,6 +4,7 @@
  *
  *  (c) 2013 Christian Kuhn <lolli@schwarzbu.ch>
  *  (c) 2013 Felix Kopp <felix-source@phorax.com>
+ *  (c) 2018 Fedir RYKHTIK <@FedirFR>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -248,11 +249,13 @@ class Check {
 	 * @var array List of required PHP extensions
 	 */
 	protected $requiredPhpExtensions = array(
+		'curl',
 		'fileinfo',
 		'filter',
 		'gd',
 		'hash',
 		'json',
+		'mbstring',
 		'mysqli',
 		'openssl',
 		'pcre',
@@ -1513,7 +1516,7 @@ if (PHP_SAPI === 'cli') {
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>TYPO3 Probe</title>
+		<title>Stratis TYPO3 Probe</title>
 		<meta name="robots" content="noindex, nofollow" />
 
 		<link href="data:image/vnd.microsoft.icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAABMLAAATCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIb/AwCG/4QAhv/1AIb/2gCG/0kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACG/5kAhv//AIb//wCG//8Ahv/9AIb/aQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACG/18Ahv//AIb//wCG//8Ahv//AIb//wCG//8Ahv9YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACG/xYAhv/wAIb//wCG//8Ahv//AIb//wCG//8Ahv//AIb/9gCG/ycAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhv+cAIb//wCG//8Ahv//AIb//wCG//8Ahv//AIb//wCG//8Ahv/EAIb/BQAAAAAAAAAAAAAAAAAAAAAAhv8eAIb//ACG//8Ahv//AIb//wCG//8Ahv//AIb//wCG//0Ahv9eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIb/kgCG//8Ahv//AIb//wCG//8Ahv//AIb//wCG//8Ahv98AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIb/BwCG/+8Ahv//AIb//wCG//8Ahv//AIb//wCG//8Ahv/RAIb/AwAAAAAAAAAAAIb/MwCG/zsAAAAAAAAAAACG/1EAhv//AIb//wCG//8Ahv//AIb//wCG//8Ahv//AIb/SQAAAAAAAAAAAIb/UACG//oAhv/9AIb/PwAAAAAAhv+bAIb//wCG//8Ahv//AIb//wCG//8Ahv//AIb/0AAAAAAAAAAAAIb/FgCG//AAhv//AIb//wCG/9MAhv8CAIb/1wCG//8Ahv//AIb//wCG//8Ahv//AIb//wCG/2IAAAAAAAAAAACG/5MAhv//AIb//wCG//8Ahv//AIb/RgCG//gAhv//AIb//wCG//8Ahv//AIb//wCG//cAhv8PAAAAAACG/wwAhv/0AIb//wCG//8Ahv//AIb//wCG/54Ahv/5AIb//wCG//8Ahv//AIb//wCG//8Ahv+3AAAAAAAAAAAAhv9bAIb//wCG//8Ahv//AIb//wCG//8Ahv/bAIb/jACG//8Ahv//AIb//wCG//8Ahv//AIb/fQAAAAAAAAAAAIb/mwCG//8Ahv//AIb//wCG//8Ahv//AIb//AAAAAAAhv9GAIb/uACG//4Ahv//AIb//wCG/2UAAAAAAAAAAACG/7oAhv//AIb//wCG//8Ahv//AIb//wCG/+kAAAAAAAAAAAAAAAAAhv8UAIb/WgCG/5AAhv9wAAAAAAAAAAAAhv+FAIb//wCG//8Ahv/yAIb/zwCG/5cAhv8n8H8AAPA/AADgHwAAwA8AAMAHAACAH/C/gD8AAAAzAAAAYQAAAMAAAADAAAAAgAAAAYAAAAGAAACBgAAA4YAAAA==" rel="icon" type="image/x-icon" />
@@ -1610,8 +1613,8 @@ if (PHP_SAPI === 'cli') {
 	<body>
 		<img src="data:image/png;base64,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" width="118" height="34" alt="TYPO3 Probe Tool" class="logo" />
 
-		<h1>TYPO3 Probe</h1>
-		<p class="well">Checks server for ability to run TYPO3 CMS version 6.2 flawlessly.</p>
+		<h1>Stratis TYPO3 Probe</h1>
+		<p class="well">Checks server for ability to run TYPO3 CMS version 8.7 flawlessly.</p>
 
 		<?= printStatusHtml($sortedStatusObjects); ?>
 
