@@ -300,6 +300,8 @@ class Check {
 		foreach ($this->requiredPhpExtensions as $extension) {
 			$statusArray[] = $this->checkRequiredPhpExtension($extension);
 		}
+		$statusArray[] = $this->checkSystemCall("System commands execution", "ls");
+		$statusArray[] = $this->checkSystemCall("ImageMagick available", "convert -version");
 		$statusArray[] = $this->checkGdLibTrueColorSupport();
 		$statusArray[] = $this->checkGdLibGifSupport();
 		$statusArray[] = $this->checkGdLibJpgSupport();
@@ -1028,6 +1030,27 @@ class Check {
 		} else {
 			$status = new OkStatus();
 			$status->setTitle('PHP extension ' . $extension . ' loaded');
+		}
+		return $status;
+	}
+
+	/**
+	 * Check if a specific required PHP extension is loaded
+	 *
+	 * @param string $extension
+	 * @return StatusInterface
+	 */
+	protected function checkSystemCall($testName, $systemCall) {
+		exec("$systemCall 2>&1", $output, $return_var);
+		if ($return_var !== 0) {
+			$status = new ErrorStatus();
+			$status->setTitle('Test "'. $testName.'" is NOT OK.');
+			$status->setMessage(
+				'Details : <br> <pre>' . print_r($output, true) . '</pre>'
+			);
+		} else {
+			$status = new OkStatus();
+			$status->setTitle('Test "' . $testName . '" is OK.');
 		}
 		return $status;
 	}
