@@ -305,6 +305,7 @@ class Check {
 		}
 		$statusArray[] = $this->checkSystemCall("System commands execution", "ls");
 		$statusArray[] = $this->checkSystemCall("ImageMagick available", "convert -version");
+		$statusArray[] = $this->checkSystemCall("ghostscript available", "ghostscript --version");
 		$statusArray[] = $this->checkGdLibTrueColorSupport();
 		$statusArray[] = $this->checkGdLibGifSupport();
 		$statusArray[] = $this->checkGdLibJpgSupport();
