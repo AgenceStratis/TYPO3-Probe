@@ -310,6 +310,7 @@ class Check {
 		$statusArray[] = $this->checkPhpMagicQuotes();
 		$statusArray[] = $this->checkRegisterGlobals();
 		$statusArray[] = $this->isTrueTypeFontDpiStandard();
+		$statusArray[] = $this->checkPhpValueIsAtLeast('max_input_vars', 1500);
 		return $statusArray;
 	}
 
@@ -413,6 +414,27 @@ class Check {
 		} else {
 			$status = new OkStatus();
 			$status->setTitle('Maximum post upload size correlates with maximum upload file size in PHP ('.ini_get('post_max_size').')');
+		}
+		return $status;
+	}
+
+	/**
+	 * Check maximum post upload size correlates with maximum file upload
+	 *
+	 * @return StatusInterface
+	 */
+	protected function checkPhpValueIsAtLeast($iniGetKey, $recommendedValue) {
+		$currentValue = intval(ini_get($iniGetKey));
+		if ($currentValue <= $recommendedValue) {
+			$status = new ErrorStatus();
+			$status->setTitle('ERROR: ' . $iniGetKey .' = '. $currentValue);
+			$status->setMessage(
+				$iniGetKey . '=' . $currentValue . LF .
+				'should be at least ' . $recommendedValue
+			);
+		} else {
+			$status = new OkStatus();
+			$status->setTitle($iniGetKey . '=' . $currentValue, 'minimal recommended value is ' . $recommendedValue);
 		}
 		return $status;
 	}
