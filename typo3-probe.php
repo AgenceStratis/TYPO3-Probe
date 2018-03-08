@@ -282,9 +282,9 @@ class Check {
 		$statusArray[] = $this->checkFileUploadEnabled();
 		$statusArray[] = $this->checkMaximumFileUploadSize(TYPO3ProbeConfiguration::$upload_size);
 		$statusArray[] = $this->checkPostUploadSizeIsHigherOrEqualMaximumFileUploadSize(TYPO3ProbeConfiguration::$upload_size);
-		$statusArray[] = $this->checkMemorySettings();
+		$statusArray[] = $this->checkMemorySettings(TYPO3ProbeConfiguration::$memory_limit);
 		$statusArray[] = $this->checkPhpVersion();
-		$statusArray[] = $this->checkMaxExecutionTime(240);
+		$statusArray[] = $this->checkMaxExecutionTime(TYPO3ProbeConfiguration::$max_execution_time);
 		$statusArray[] = $this->checkDisableFunctions();
 		$statusArray[] = $this->checkSafeMode();
 		$statusArray[] = $this->checkDocRoot();
@@ -478,9 +478,8 @@ class Check {
 	 *
 	 * @return StatusInterface
 	 */
-	protected function checkMemorySettings() {
+	protected function checkMemorySettings($recommendedMemoryLimit) {
 		$minimumMemoryLimit = 32;
-		$recommendedMemoryLimit = 64;
 		$memoryLimit = $this->getBytesFromSizeMeasurement(ini_get('memory_limit'));
 		if ($memoryLimit <= 0) {
 			$status = new WarningStatus();
