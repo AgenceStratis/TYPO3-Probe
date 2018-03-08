@@ -311,7 +311,7 @@ class Check {
 		$statusArray[] = $this->checkRegisterGlobals();
 		$statusArray[] = $this->isTrueTypeFontDpiStandard();
 		$statusArray[] = $this->checkPhpValueRange('max_input_vars', 1500, 10000);
-		$statusArray[] = $this->checkPhpValueRange('always_populate_raw_post_data', -2, 0);
+		$statusArray[] = $this->checkPhpValueEquals('always_populate_raw_post_data', -1);
 		return $statusArray;
 	}
 
@@ -439,6 +439,33 @@ class Check {
 		} else {
 			$status = new OkStatus();
 			$status->setTitle($iniGetKey . '=' . $currentValue, 'minimal recommended value is ' . $recommendedMinValue . ' and recommended maximum value is ' . $recommendedMaxValue);
+		}
+		return $status;
+	}
+
+	/**
+	 * Check if the recommended PHP configuration value is equal to current one
+	 *
+	 * @param $iniGetKey string
+	 * @param $recommendedValue integer
+	 * @return \ErrorStatus|\OkStatus
+	 */
+	protected function checkPhpValueEquals($iniGetKey, $recommendedValue) {
+		$currentValue = ini_get($iniGetKey);
+		if ($currentValue !== $recommendedValue) {
+
+			// Rendering vars for humans
+			$currentValue = var_export($currentValue, true);
+
+			$status = new ErrorStatus();
+			$status->setTitle('ERROR: ' . $iniGetKey .' = '. $currentValue);
+			$status->setMessage(
+				$iniGetKey . '=' . $currentValue . LF .
+				'should be equal to ' . $recommendedValue
+			);
+		} else {
+			$status = new OkStatus();
+			$status->setTitle($iniGetKey . '=' . $currentValue, '; recommended value is ' . $recommendedValue );
 		}
 		return $status;
 	}
