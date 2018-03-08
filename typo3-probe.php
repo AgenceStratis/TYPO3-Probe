@@ -419,9 +419,11 @@ class Check {
 	}
 
 	/**
-	 * Check maximum post upload size correlates with maximum file upload
+	 * Check if for minimal acceptable PHP numeric configuration value
 	 *
-	 * @return StatusInterface
+	 * @param $iniGetKey string
+	 * @param $recommendedValue integer
+	 * @return \ErrorStatus|\OkStatus
 	 */
 	protected function checkPhpValueIsAtLeast($iniGetKey, $recommendedValue) {
 		$currentValue = intval(ini_get($iniGetKey));
