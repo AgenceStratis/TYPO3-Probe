@@ -310,7 +310,8 @@ class Check {
 		$statusArray[] = $this->checkPhpMagicQuotes();
 		$statusArray[] = $this->checkRegisterGlobals();
 		$statusArray[] = $this->isTrueTypeFontDpiStandard();
-		$statusArray[] = $this->checkPhpValueIsAtLeast('max_input_vars', 1500);
+		$statusArray[] = $this->checkPhpValueRange('max_input_vars', 1500, 10000);
+		$statusArray[] = $this->checkPhpValueRange('always_populate_raw_post_data', -2, 0);
 		return $statusArray;
 	}
 
@@ -419,24 +420,25 @@ class Check {
 	}
 
 	/**
-	 * Check if for minimal acceptable PHP numeric configuration value
+	 * Check if for range of acceptable PHP numeric configuration values
 	 *
 	 * @param $iniGetKey string
 	 * @param $recommendedValue integer
 	 * @return \ErrorStatus|\OkStatus
 	 */
-	protected function checkPhpValueIsAtLeast($iniGetKey, $recommendedValue) {
+	protected function checkPhpValueRange($iniGetKey, $recommendedMinValue, $recommendedMaxValue) {
 		$currentValue = intval(ini_get($iniGetKey));
-		if ($currentValue <= $recommendedValue) {
+		if ($currentValue < $recommendedMinValue || $currentValue > $recommendedMaxValue ) {
 			$status = new ErrorStatus();
 			$status->setTitle('ERROR: ' . $iniGetKey .' = '. $currentValue);
 			$status->setMessage(
 				$iniGetKey . '=' . $currentValue . LF .
-				'should be at least ' . $recommendedValue
+				'should be bigger than ' . $recommendedMinValue .
+				' and should be less than ' . $recommendedMaxValue
 			);
 		} else {
 			$status = new OkStatus();
-			$status->setTitle($iniGetKey . '=' . $currentValue, 'minimal recommended value is ' . $recommendedValue);
+			$status->setTitle($iniGetKey . '=' . $currentValue, 'minimal recommended value is ' . $recommendedMinValue . ' and recommended maximum value is ' . $recommendedMaxValue);
 		}
 		return $status;
 	}
