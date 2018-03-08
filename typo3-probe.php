@@ -35,6 +35,9 @@
  * @author Christian Kuhn <lolli@schwarzbu.ch>
  * @see TYPO3 project: typo3/sysext/install/Classes/SystemEnvironment/StatusInterface.php
  */
+
+include_once 'recommened_values.php';
+
 interface StatusInterface {
 
 	/**
@@ -277,8 +280,8 @@ class Check {
 		$statusArray = array();
 		$statusArray[] = $this->checkCurrentDirectoryIsInIncludePath();
 		$statusArray[] = $this->checkFileUploadEnabled();
-		$statusArray[] = $this->checkMaximumFileUploadSize(100);
-		$statusArray[] = $this->checkPostUploadSizeIsHigherOrEqualMaximumFileUploadSize();
+		$statusArray[] = $this->checkMaximumFileUploadSize(TYPO3ProbeConfiguration::$upload_size);
+		$statusArray[] = $this->checkPostUploadSizeIsHigherOrEqualMaximumFileUploadSize(TYPO3ProbeConfiguration::$upload_size);
 		$statusArray[] = $this->checkMemorySettings();
 		$statusArray[] = $this->checkPhpVersion();
 		$statusArray[] = $this->checkMaxExecutionTime(240);
@@ -402,7 +405,7 @@ class Check {
 	protected function checkPostUploadSizeIsHigherOrEqualMaximumFileUploadSize() {
 		$maximumUploadFilesize = $this->getBytesFromSizeMeasurement(ini_get('upload_max_filesize'));
 		$maximumPostSize = $this->getBytesFromSizeMeasurement(ini_get('post_max_size'));
-		if ($maximumPostSize < $maximumUploadFilesize) {
+		if ($maximumPostSize < $maximumUploadFilesize || $maximumPostSize < 1024 * 1024 * TYPO3ProbeConfiguration::$upload_size) {
 			$status = new ErrorStatus();
 			$status->setTitle('Maximum size for POST requests is smaller than maximum upload filesize in PHP');
 			$status->setMessage(
