@@ -277,11 +277,11 @@ class Check {
 		$statusArray = array();
 		$statusArray[] = $this->checkCurrentDirectoryIsInIncludePath();
 		$statusArray[] = $this->checkFileUploadEnabled();
-		$statusArray[] = $this->checkMaximumFileUploadSize();
+		$statusArray[] = $this->checkMaximumFileUploadSize(100);
 		$statusArray[] = $this->checkPostUploadSizeIsHigherOrEqualMaximumFileUploadSize();
 		$statusArray[] = $this->checkMemorySettings();
 		$statusArray[] = $this->checkPhpVersion();
-		$statusArray[] = $this->checkMaxExecutionTime();
+		$statusArray[] = $this->checkMaxExecutionTime(240);
 		$statusArray[] = $this->checkDisableFunctions();
 		$statusArray[] = $this->checkSafeMode();
 		$statusArray[] = $this->checkDocRoot();
@@ -368,19 +368,19 @@ class Check {
 	}
 
 	/**
-	 * Check maximum file upload size against default value of 10MB
-	 *
-	 * @return StatusInterface
+	 * Check maximum file upload size against recommended value in megabytes
+	 * @param $recommendedUploadSize integer
+	 * @return \ErrorStatus|\OkStatus
 	 */
-	protected function checkMaximumFileUploadSize() {
+	protected function checkMaximumFileUploadSize($recommendedUploadSize) {
 		$maximumUploadFilesize = $this->getBytesFromSizeMeasurement(ini_get('upload_max_filesize'));
-		if ($maximumUploadFilesize < 1024 * 1024 * 10) {
+		if ($maximumUploadFilesize < 1024 * 1024 * $recommendedUploadSize) {
 			$status = new ErrorStatus();
 			$status->setTitle('PHP Maximum upload filesize too small');
 			$status->setMessage(
 				'upload_max_filesize=' . ini_get('upload_max_filesize') . LF .
 				'By default TYPO3 supports uploading, copying and moving' .
-				' files of sizes up to 10MB (you can alter the TYPO3 defaults' .
+				' files of sizes up to '.strval($recommendedUploadSize).'MB (you can alter the TYPO3 defaults' .
 				' by the config option TYPO3_CONF_VARS[BE][maxFileSize]).' .
 				' Your current PHP value is below this, so at this point, PHP determines' .
 				' the limits for uploaded filesizes and not TYPO3.' .
@@ -544,9 +544,8 @@ class Check {
 	 *
 	 * @return StatusInterface
 	 */
-	protected function checkMaxExecutionTime() {
+	protected function checkMaxExecutionTime($recommendedMaximumExecutionTime) {
 		$minimumMaximumExecutionTime = 30;
-		$recommendedMaximumExecutionTime = 240;
 		$currentMaximumExecutionTime = ini_get('max_execution_time');
 		if ($currentMaximumExecutionTime == 0) {
 			if (PHP_SAPI === 'cli') {
