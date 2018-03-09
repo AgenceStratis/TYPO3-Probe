@@ -2,7 +2,7 @@
 
 class TYPO3ProbeConfiguration {
     /**
-     * Max upload sier in megabytes
+     * Max upload size in megabytes
      * @var int
      */
     public static $upload_size = 100;
