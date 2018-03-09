@@ -36,6 +36,10 @@
  * @see TYPO3 project: typo3/sysext/install/Classes/SystemEnvironment/StatusInterface.php
  */
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include_once 'recommened_values.php';
 
 interface StatusInterface {
@@ -316,6 +320,19 @@ class Check {
 		$statusArray[] = $this->isTrueTypeFontDpiStandard();
 		$statusArray[] = $this->checkPhpValueRange('max_input_vars', 1500, 10000);
 		$statusArray[] = $this->checkPhpValueEquals('always_populate_raw_post_data', -1);
+		if (function_exists('apache_get_modules')) {
+			foreach (TYPO3ProbeConfiguration::$apache_modules as $required_apache_module) {
+				$statusArray[] = $this->checkApacheModule($required_apache_module);
+			}
+		} else {
+			$status = new WarningStatus();
+			$status->setTitle('Function apache_get_modules is not defined');
+			$status->setMessage(
+				'Could not verify Apache modules'
+			);
+			$statusArray[] = $status;
+		}
+
 		return $statusArray;
 	}
 
@@ -470,6 +487,25 @@ class Check {
 		} else {
 			$status = new OkStatus();
 			$status->setTitle($iniGetKey . '=' . $currentValue, '; recommended value is ' . $recommendedValue );
+		}
+		return $status;
+	}
+
+	/**
+	 * @param $required_apache_module
+	 * @return \ErrorStatus|\OkStatus
+	 */
+	protected function checkApacheModule($required_apache_module) {
+		$apache_modules = apache_get_modules();
+		if (in_array($required_apache_module, $apache_modules)) {
+			$status = new OkStatus();
+			$status->setTitle('Apache required module found : ' . $required_apache_module);
+		} else {
+			$status = new ErrorStatus();
+			$status->setTitle('Apache module is missing : ' . $required_apache_module);
+			$status->setMessage(
+				'Please enable ' .$required_apache_module . ' Apache module'
+			);
 		}
 		return $status;
 	}
