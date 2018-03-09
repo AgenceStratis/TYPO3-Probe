@@ -46,4 +46,4 @@ How to contribute
 ------------
 
 Please report issues with this probe script at Github issues:
-<a href="https://github.com/7elix/TYPO3-Probe/issues" target="_blank">https://github.com/7elix/TYPO3-Probe/issues</a>
+<a href="https://github.com/AgenceStratis/TYPO3-Probe" target="_blank">https://github.com/AgenceStratis/TYPO3-Probe</a>
